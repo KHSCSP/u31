@@ -32,35 +32,37 @@ godirect = GoDirect(use_ble=True, use_usb=True)
 print("GoDirect v"+str(godirect.get_version()))
 print("\nSearching...", flush=True, end ="")
 device = godirect.get_device(threshold=-100)
- 
+
 # Once a device is found or selected it must be opened.
 if device != None and device.open(auto_start=False):
-        print("connecting.\n")
-        print("Connected to "+device.name)
+    print("connecting.\n")
+    print("Connected to "+device.name)
 
-        # A specific sensor (or sensors) can be selected for data collection by calling
-        # device.enable_sensors([]) prior to calling device.start().
-        # If you do not use device.enable_sensors([]), the default sensor(s) will be automatically
-        # enabled when device.start() is called. 
+    # A specific sensor (or sensors) can be selected for data collection by calling
+    # device.enable_sensors([]) prior to calling device.start().
+    # If you do not use device.enable_sensors([]), the default sensor(s) will be automatically
+    # enabled when device.start() is called. 
 
-        #device.enable_sensors([1,2])    # Uncomment this line if you want to enable specific sensors
-        device.start(period=1000) 
-        print("start")
-        sensors = device.get_enabled_sensors()   # after start() is called, an enabled sensor list is available
-                
-        print("Reading measurements\n")
-        for i in range(0,10):
-                if device.read():
-                        for sensor in sensors:
-                                # The 'sensor.values' call returns a list of measurements. This list might contain 
-                                # one sensor value, or multiple sensor values (if fast sampling)
-                                print(sensor.sensor_description+": "+str(sensor.values))                  
-                                sensor.clear()
-        device.stop()
-        device.close()
-        print("\nDisconnected from "+device.name)
+    #device.enable_sensors([1,2])    # Uncomment this line if you want to enable specific sensors
+    device.start(period=1000) 
+    print("start")
+    sensors = device.get_enabled_sensors()   # after start() is called, an enabled sensor list is available
+
+    print("Reading measurements\n")
+    for i in range(0,10):
+        if device.read():
+            for sensor in sensors:
+                # The 'sensor.values' call returns a list of measurements. This list might contain 
+                # one sensor value, or multiple sensor values (if fast sampling)
+                print(sensor.sensor_description+": "+str(sensor.values))                  
+                sensor.clear()
+    # end loop
+    device.stop()
+    device.close()
+    print("\nDisconnected from "+device.name)
 
 else:
-        print("Go Direct device not found/opened")
+    print("Go Direct device not found/opened")
 
 godirect.quit()
+
